@@ -1,0 +1,107 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="YoutubeDownloader.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="True">
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="SearchResultsItemTemplate">
+            <Grid Margin="0,0,0,30">
+                <TextBlock Text="{Binding Title}" VerticalAlignment="Top" 
+         HorizontalAlignment="Left" Width="355" FontWeight="ExtraBold" Margin="115,0,0,0" TextWrapping="Wrap"/>
+                <Image Source="{Binding VideoImageUrl}" HorizontalAlignment="Left" Width="100"   
+         Height="100" Stretch="UniformToFill"/>
+                <Button Name="download_bt" Content="Download" Tag="{Binding BindsDirectlyToSource=True}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_download"/>
+                <Button Name="stream_bt" Content="Stream" Tag="{Binding id}" VerticalAlignment="Bottom" Width="150" Click="btn_stream"/>
+            </Grid>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <controls:Pivot Title="Youtube Hub" Name="mainPivot">
+            <controls:PivotItem Header="Search" Name="search">
+                <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+                    <TextBox Height="72" HorizontalAlignment="Left" Name="SearchText" Text="" VerticalAlignment="Top" Width="319" />
+                    <Button x:Name="SearchButton" Content="Search" HorizontalAlignment="Right" VerticalAlignment="Top" Click="SearchButton_Click"/>
+                    <ListBox x:Name="ResultsList" Margin="0,76,0,0" Background="#33FFFFFF" ItemTemplate="{StaticResource SearchResultsItemTemplate}" ItemsSource="{Binding SearchResults}" />
+                </Grid>
+            </controls:PivotItem>
+            <controls:PivotItem Header="Downloaded" Name="download">
+                <Grid>
+                    <TextBlock Text="No pending downloads currently" Name="EmptyDownloads" Visibility="Collapsed"/>
+                    <ListBox Name="Downloaded_List" SelectionChanged="DownloadSelectionChanged" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Background="Transparent" Margin="0,0,0,30">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="380"/>
+                                        <ColumnDefinition Width="50"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{Binding}" FontWeight="ExtraBold" FontSize="25"/>
+
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Button Tag="{Binding}" Content="X" BorderBrush="Red" Background="Red" Foreground="{StaticResource PhoneBackgroundBrush}" VerticalAlignment="Top" BorderThickness="0" Width="50" Padding="0,0,0,0" Click="remove_file"></Button>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </controls:PivotItem>
+                <controls:PivotItem Header="Progress" Name="progress">
+                <Grid>
+                    <TextBlock Text="No pending downloads currently" Name="EmptyTextBlock" Visibility="Collapsed"/>
+                    <ListBox Name="TransferListBox" SelectionChanged="VideoListSelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Background="Transparent" Margin="0,0,0,30">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="380"/>
+                                        <ColumnDefinition Width="50"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{Binding name}"  Foreground="{StaticResource PhoneAccentBrush}" FontWeight="Bold"/>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="status: "/>
+                                                <TextBlock Text="{Binding status}" HorizontalAlignment="Right"/>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Data received (MB): "/>
+                                                <TextBlock Text="{Binding recieved}" HorizontalAlignment="Right"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Button Tag="{Binding url}" Content="X" BorderBrush="Red" Background="Red" Foreground="{StaticResource PhoneBackgroundBrush}" VerticalAlignment="Top" BorderThickness="0" Width="50" Padding="0,0,0,0" Click="remove_download"></Button>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </controls:PivotItem>
+        </controls:Pivot>
+
+        <!--ContentPanel - place additional content here-->
+        
+    </Grid>
+
+</phone:PhoneApplicationPage>
